@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Space Hub - All Space Info</title>
+    <title>Complete Space Hub - Real API Data</title>
     <style>
         * {
             margin: 0;
@@ -20,7 +20,7 @@
 
         .header {
             background: rgba(10, 14, 39, 0.95);
-            border-bottom: 2px solid #64c8ff;
+            border-bottom: 3px solid #64c8ff;
             padding: 20px;
             position: sticky;
             top: 0;
@@ -33,19 +33,25 @@
         }
 
         h1 {
-            font-size: 2em;
+            font-size: 2.5em;
             color: #64c8ff;
             text-shadow: 0 0 20px rgba(100, 200, 255, 0.5);
             margin-bottom: 15px;
         }
 
-        .nav-tabs {
+        .subtitle {
+            color: #a0a0c0;
+            margin-bottom: 15px;
+            font-size: 0.95em;
+        }
+
+        .nav {
             display: flex;
             gap: 10px;
             flex-wrap: wrap;
         }
 
-        .nav-tab {
+        .nav-btn {
             padding: 10px 20px;
             border: 2px solid #64c8ff;
             background: rgba(100, 200, 255, 0.1);
@@ -54,13 +60,14 @@
             border-radius: 8px;
             font-weight: bold;
             transition: all 0.3s;
+            font-size: 1em;
         }
 
-        .nav-tab:hover {
+        .nav-btn:hover {
             background: rgba(100, 200, 255, 0.2);
         }
 
-        .nav-tab.active {
+        .nav-btn.active {
             background: #64c8ff;
             color: #0a0e27;
         }
@@ -71,11 +78,11 @@
             padding: 30px 20px;
         }
 
-        .section {
+        .page {
             display: none;
         }
 
-        .section.active {
+        .page.active {
             display: block;
         }
 
@@ -99,10 +106,20 @@
             to { transform: rotate(360deg); }
         }
 
+        .error-box {
+            background: rgba(255, 94, 59, 0.1);
+            border: 2px solid #ff5e3b;
+            color: #ff9999;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+        }
+
         .grid {
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
             gap: 20px;
+            margin-top: 20px;
         }
 
         .card {
@@ -127,7 +144,11 @@
             border-left: 5px solid #0b3d91;
         }
 
-        .agency {
+        .card.other {
+            border-left: 5px solid #ffc107;
+        }
+
+        .agency-badge {
             display: inline-block;
             padding: 5px 12px;
             border-radius: 20px;
@@ -136,34 +157,39 @@
             margin-bottom: 10px;
         }
 
-        .agency.spacex {
+        .agency-badge.spacex {
             background: rgba(255, 94, 59, 0.3);
             color: #ff5e3b;
         }
 
-        .agency.nasa {
+        .agency-badge.nasa {
             background: rgba(11, 61, 145, 0.3);
             color: #0b3d91;
         }
 
-        .title {
-            font-size: 1.6em;
+        .agency-badge.other {
+            background: rgba(255, 193, 7, 0.3);
+            color: #ffc107;
+        }
+
+        .card-title {
+            font-size: 1.3em;
             color: #64c8ff;
-            margin-bottom: 10px;
+            margin-bottom: 8px;
             font-weight: bold;
         }
 
-        .subtitle {
+        .card-subtitle {
             color: #a0a0c0;
-            margin-bottom: 15px;
-            font-size: 0.95em;
+            margin-bottom: 12px;
+            font-size: 0.9em;
         }
 
         .info-row {
             display: flex;
             justify-content: space-between;
             padding: 8px 0;
-            font-size: 0.9em;
+            font-size: 0.85em;
             border-bottom: 1px solid rgba(100, 200, 255, 0.1);
         }
 
@@ -174,6 +200,7 @@
         .value {
             color: #64c8ff;
             font-weight: bold;
+            text-align: right;
         }
 
         .countdown {
@@ -184,24 +211,24 @@
             font-size: 1.1em;
             color: #64c8ff;
             font-weight: bold;
-            margin-top: 10px;
+            margin-top: 12px;
         }
 
-        .status {
+        .status-badge {
             display: inline-block;
-            padding: 4px 10px;
+            padding: 5px 10px;
             border-radius: 15px;
             font-size: 0.8em;
             font-weight: bold;
             margin-top: 10px;
         }
 
-        .status.upcoming {
+        .status-upcoming {
             background: rgba(100, 200, 255, 0.2);
             color: #64c8ff;
         }
 
-        .status.recent {
+        .status-recent {
             background: rgba(76, 175, 80, 0.2);
             color: #4caf50;
         }
@@ -213,23 +240,23 @@
             flex-wrap: wrap;
         }
 
-        button {
+        .filter-btn {
             padding: 8px 16px;
             border: 2px solid #64c8ff;
             background: rgba(100, 200, 255, 0.1);
             color: #64c8ff;
-            border-radius: 8px;
             cursor: pointer;
+            border-radius: 8px;
             font-weight: bold;
             transition: all 0.3s;
             font-size: 0.9em;
         }
 
-        button:hover {
-            background: rgba(100, 200, 255, 0.3);
+        .filter-btn:hover {
+            background: rgba(100, 200, 255, 0.2);
         }
 
-        button.active {
+        .filter-btn.active {
             background: #64c8ff;
             color: #0a0e27;
         }
@@ -254,61 +281,17 @@
             margin-top: 10px;
         }
 
-        .news-item {
-            background: rgba(30, 40, 80, 0.9);
-            border-left: 4px solid #64c8ff;
-            padding: 20px;
-            margin-bottom: 15px;
-            border-radius: 8px;
-        }
-
-        .news-title {
-            font-size: 1.2em;
+        h2 {
             color: #64c8ff;
-            margin-bottom: 8px;
-            font-weight: bold;
-        }
-
-        .news-date {
-            color: #7080a0;
-            font-size: 0.9em;
-            margin-bottom: 10px;
-        }
-
-        .news-content {
-            color: #d0d0d0;
-            line-height: 1.6;
-        }
-
-        .astronaut-card {
-            text-align: center;
-        }
-
-        .astronaut-name {
-            font-size: 1.3em;
-            color: #64c8ff;
-            margin-bottom: 8px;
-            font-weight: bold;
-        }
-
-        .astronaut-info {
-            color: #a0a0c0;
-            font-size: 0.9em;
-            line-height: 1.6;
-        }
-
-        .error {
-            background: rgba(255, 94, 59, 0.1);
-            border: 2px solid #ff5e3b;
-            color: #ff9999;
-            padding: 15px;
-            border-radius: 8px;
+            font-size: 1.8em;
             margin-bottom: 20px;
         }
 
-        .refresh-btn {
-            padding: 10px 25px;
-            margin-left: auto;
+        .no-data {
+            text-align: center;
+            padding: 40px;
+            color: #a0a0c0;
+            font-size: 1.1em;
         }
 
         @media (max-width: 768px) {
@@ -316,16 +299,20 @@
                 font-size: 1.5em;
             }
 
-            .nav-tabs {
-                flex-direction: column;
-            }
-
-            .nav-tab {
-                width: 100%;
+            h2 {
+                font-size: 1.3em;
             }
 
             .grid {
                 grid-template-columns: 1fr;
+            }
+
+            .nav {
+                flex-direction: column;
+            }
+
+            .nav-btn {
+                width: 100%;
             }
 
             .stat-number {
@@ -337,317 +324,359 @@
 <body>
     <div class="header">
         <div class="header-content">
-            <h1>🚀 SPACE HUB - Everything Space</h1>
-            <div class="nav-tabs">
-                <div class="nav-tab active" data-tab="launches">🚀 Live Launches</div>
-                <div class="nav-tab" data-tab="spacex">SpaceX</div>
-                <div class="nav-tab" data-tab="nasa">NASA</div>
-                <div class="nav-tab" data-tab="iss">ISS Tracker</div>
-                <div class="nav-tab" data-tab="astronauts">👨‍🚀 Astronauts</div>
-                <div class="nav-tab" data-tab="stats">📊 Stats</div>
+            <h1>🚀 COMPLETE SPACE HUB</h1>
+            <p class="subtitle">Real-time data from SpaceX API, RocketLaunch.Live, NASA API, and Open-Notify</p>
+            <div class="nav">
+                <button class="nav-btn active" onclick="showPage('launches')">🚀 All Launches</button>
+                <button class="nav-btn" onclick="showPage('spacex')">SpaceX</button>
+                <button class="nav-btn" onclick="showPage('nasa')">NASA</button>
+                <button class="nav-btn" onclick="showPage('iss')">🛰️ ISS</button>
+                <button class="nav-btn" onclick="showPage('astronauts')">👨‍🚀 Astronauts</button>
+                <button class="nav-btn" onclick="showPage('apod')">🌌 NASA APOD</button>
             </div>
         </div>
     </div>
 
     <div class="container">
-        <!-- LAUNCHES SECTION -->
-        <div class="section active" id="launches">
-            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
-                <h2 style="color: #64c8ff; font-size: 1.8em;">🚀 All Launch Events</h2>
-                <button class="refresh-btn" onclick="location.reload()">🔄 Refresh</button>
-            </div>
-
+        <!-- ALL LAUNCHES -->
+        <div class="page active" id="launches">
+            <h2>🚀 All Upcoming Launches</h2>
+            
             <div class="filters">
-                <button class="filter-launch active" data-filter="all">All</button>
-                <button class="filter-launch" data-filter="upcoming">⏳ Upcoming</button>
-                <button class="filter-launch" data-filter="recent">✓ Recent</button>
-                <button class="filter-launch" data-filter="spacex">SpaceX</button>
-                <button class="filter-launch" data-filter="nasa">NASA</button>
+                <button class="filter-btn active" onclick="filterLaunches('all')">All</button>
+                <button class="filter-btn" onclick="filterLaunches('spacex')">SpaceX</button>
+                <button class="filter-btn" onclick="filterLaunches('nasa')">NASA</button>
+                <button class="filter-btn" onclick="filterLaunches('other')">Other Agencies</button>
             </div>
 
             <div id="launches-grid" class="grid">
-                <div class="loading"><div class="spinner"></div>Loading launches...</div>
+                <div class="loading"><div class="spinner"></div>Loading launches from SpaceX & RocketLaunch.Live APIs...</div>
             </div>
         </div>
 
-        <!-- SPACEX SECTION -->
-        <div class="section" id="spacex">
-            <h2 style="color: #ff5e3b; font-size: 1.8em; margin-bottom: 20px;">🔴 SpaceX</h2>
+        <!-- SPACEX -->
+        <div class="page" id="spacex">
+            <h2>🔴 SpaceX Launches</h2>
             
             <div class="stat-box">
-                <div class="stat-number" id="spacex-count">--</div>
-                <div class="stat-label">Upcoming Launches</div>
+                <div class="stat-number" id="spacex-total">--</div>
+                <div class="stat-label">Total SpaceX Launches</div>
             </div>
 
             <div id="spacex-grid" class="grid">
-                <div class="loading"><div class="spinner"></div>Loading SpaceX data...</div>
+                <div class="loading"><div class="spinner"></div>Loading SpaceX data from API...</div>
             </div>
         </div>
 
-        <!-- NASA SECTION -->
-        <div class="section" id="nasa">
-            <h2 style="color: #0b3d91; font-size: 1.8em; margin-bottom: 20px;">🔵 NASA</h2>
+        <!-- NASA -->
+        <div class="page" id="nasa">
+            <h2>🔵 NASA Missions</h2>
             
-            <div class="stat-box">
-                <div class="stat-number" id="nasa-count">--</div>
-                <div class="stat-label">Upcoming Missions</div>
-            </div>
-
             <div id="nasa-grid" class="grid">
-                <div class="loading"><div class="spinner"></div>Loading NASA data...</div>
+                <div class="loading"><div class="spinner"></div>Loading NASA launches from RocketLaunch.Live API...</div>
             </div>
         </div>
 
-        <!-- ISS SECTION -->
-        <div class="section" id="iss">
-            <h2 style="color: #64c8ff; font-size: 1.8em; margin-bottom: 20px;">🛰️ International Space Station</h2>
-            
-            <div class="stat-box">
-                <div class="stat-number" id="iss-altitude">--</div>
-                <div class="stat-label">Altitude (km)</div>
-            </div>
-
-            <div class="stat-box">
-                <div class="stat-number" id="iss-speed">--</div>
-                <div class="stat-label">Speed (km/h)</div>
-            </div>
-
-            <div class="stat-box">
-                <div class="stat-number" id="iss-crew">--</div>
-                <div class="stat-label">Astronauts On Board</div>
-            </div>
-
-            <div style="background: rgba(30, 40, 80, 0.9); border: 2px solid rgba(100, 200, 255, 0.3); border-radius: 12px; padding: 20px; margin-top: 20px;">
-                <h3 style="color: #64c8ff; margin-bottom: 15px;">Current ISS Crew</h3>
-                <div id="iss-crew-list" style="display: grid; gap: 10px;">
-                    <div class="loading"><div class="spinner"></div>Loading crew info...</div>
-                </div>
-            </div>
-        </div>
-
-        <!-- ASTRONAUTS SECTION -->
-        <div class="section" id="astronauts">
-            <h2 style="color: #64c8ff; font-size: 1.8em; margin-bottom: 20px;">👨‍🚀 Active Astronauts</h2>
-            
-            <div id="astronauts-grid" class="grid">
-                <div class="loading"><div class="spinner"></div>Loading astronauts...</div>
-            </div>
-        </div>
-
-        <!-- STATS SECTION -->
-        <div class="section" id="stats">
-            <h2 style="color: #64c8ff; font-size: 1.8em; margin-bottom: 30px;">📊 Space Statistics</h2>
+        <!-- ISS -->
+        <div class="page" id="iss">
+            <h2>🛰️ International Space Station</h2>
             
             <div class="grid" style="grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));">
                 <div class="stat-box">
-                    <div class="stat-number" id="total-launches">--</div>
-                    <div class="stat-label">Total SpaceX Launches</div>
+                    <div class="stat-number" id="iss-altitude">--</div>
+                    <div class="stat-label">Altitude (km)</div>
                 </div>
-
                 <div class="stat-box">
-                    <div class="stat-number" id="spacex-landings">--</div>
-                    <div class="stat-label">Successful Landings</div>
+                    <div class="stat-number" id="iss-speed">--</div>
+                    <div class="stat-label">Speed (km/h)</div>
                 </div>
-
                 <div class="stat-box">
-                    <div class="stat-number" id="active-satellites">--</div>
-                    <div class="stat-label">Active Satellites (Starlink)</div>
+                    <div class="stat-number" id="iss-latitude">--</div>
+                    <div class="stat-label">Latitude</div>
                 </div>
-
                 <div class="stat-box">
-                    <div class="stat-number">400+</div>
-                    <div class="stat-label">Years ISS in Operation</div>
+                    <div class="stat-number" id="iss-longitude">--</div>
+                    <div class="stat-label">Longitude</div>
                 </div>
             </div>
 
-            <h3 style="color: #64c8ff; margin-top: 40px; margin-bottom: 20px; font-size: 1.4em;">🌍 Space Agencies</h3>
+            <h3 style="color: #64c8ff; margin-top: 30px; margin-bottom: 15px;">👨‍🚀 Current ISS Crew</h3>
+            <div id="iss-crew" class="grid"></div>
+        </div>
+
+        <!-- ASTRONAUTS -->
+        <div class="page" id="astronauts">
+            <h2>👨‍🚀 Astronauts Currently in Space</h2>
             
-            <div class="grid">
-                <div class="card">
-                    <div class="agency nasa">NASA</div>
-                    <div class="title">National Aeronautics & Space Administration</div>
-                    <div class="subtitle">🇺🇸 United States</div>
-                    <div class="info-row">
-                        <span class="label">Founded:</span>
-                        <span class="value">1958</span>
-                    </div>
-                    <div class="info-row">
-                        <span class="label">Focus:</span>
-                        <span class="value">Exploration & Research</span>
-                    </div>
-                </div>
+            <div id="astronauts-grid" class="grid">
+                <div class="loading"><div class="spinner"></div>Loading astronauts from Open-Notify API...</div>
+            </div>
+        </div>
 
-                <div class="card">
-                    <div class="agency spacex">SpaceX</div>
-                    <div class="title">Space Exploration Technologies</div>
-                    <div class="subtitle">🇺🇸 United States</div>
-                    <div class="info-row">
-                        <span class="label">Founded:</span>
-                        <span class="value">2002</span>
-                    </div>
-                    <div class="info-row">
-                        <span class="label">Focus:</span>
-                        <span class="value">Commercial & Cargo</span>
-                    </div>
-                </div>
-
-                <div class="card">
-                    <div style="display: inline-block; padding: 5px 12px; border-radius: 20px; font-size: 0.8em; font-weight: bold; background: rgba(255, 193, 7, 0.3); color: #ffc107; margin-bottom: 10px;">ESA</div>
-                    <div class="title">European Space Agency</div>
-                    <div class="subtitle">🇪🇺 Europe</div>
-                    <div class="info-row">
-                        <span class="label">Founded:</span>
-                        <span class="value">1975</span>
-                    </div>
-                    <div class="info-row">
-                        <span class="label">Focus:</span>
-                        <span class="value">Scientific Research</span>
-                    </div>
-                </div>
+        <!-- NASA APOD -->
+        <div class="page" id="apod">
+            <h2>🌌 NASA Astronomy Picture of the Day</h2>
+            
+            <div id="apod-container">
+                <div class="loading"><div class="spinner"></div>Loading NASA APOD data...</div>
             </div>
         </div>
     </div>
 
     <script>
+        const NASA_API_KEY = '5I1Uv2BHy149GnKb7iaVrqnlHlCfwuQp0Axerg9L'; // Your NASA API key
+
         let allLaunches = [];
         let spacexLaunches = [];
         let nasaLaunches = [];
 
-        // Tab navigation
-        document.querySelectorAll('.nav-tab').forEach(tab => {
-            tab.addEventListener('click', () => {
-                document.querySelectorAll('.nav-tab').forEach(t => t.classList.remove('active'));
-                document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
-                
-                tab.classList.add('active');
-                document.getElementById(tab.dataset.tab).classList.add('active');
-            });
-        });
+        // Show page
+        function showPage(pageName) {
+            document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+            document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+            
+            document.getElementById(pageName).classList.add('active');
+            event.target.classList.add('active');
 
-        // Filter buttons for launches
-        document.querySelectorAll('.filter-launch').forEach(btn => {
-            btn.addEventListener('click', () => {
-                document.querySelectorAll('.filter-launch').forEach(b => b.classList.remove('active'));
-                btn.classList.add('active');
-                displayLaunches(btn.dataset.filter);
-            });
-        });
+            if (pageName === 'launches') loadAllLaunches();
+            else if (pageName === 'spacex') loadSpaceX();
+            else if (pageName === 'nasa') loadNASA();
+            else if (pageName === 'iss') loadISS();
+            else if (pageName === 'astronauts') loadAstronauts();
+            else if (pageName === 'apod') loadAPOD();
+        }
 
-        // Fetch SpaceX launches
-        async function fetchSpaceXLaunches() {
+        // SPACEX API - https://api.spacexdata.com/v4/launches
+        async function loadSpaceX() {
             try {
                 const response = await fetch('https://api.spacexdata.com/v4/launches');
-                const data = await response.json();
-                
-                spacexLaunches = data.map(launch => ({
-                    id: launch.id,
-                    name: launch.name,
-                    rocket: launch.rocket,
-                    agency: 'SpaceX',
-                    date: new Date(launch.date_utc),
-                    location: launch.launchpad || 'TBD',
-                    details: launch.details || 'SpaceX mission',
-                    upcoming: new Date(launch.date_utc) > new Date(),
-                    success: launch.success
-                }));
+                spacexLaunches = await response.json();
 
-                return spacexLaunches;
+                document.getElementById('spacex-total').textContent = spacexLaunches.length;
+
+                const html = spacexLaunches.slice(0, 20).map(launch => {
+                    const date = new Date(launch.date_utc);
+                    const countdown = getCountdown(date);
+                    const dateStr = date.toLocaleDateString('en-US', {
+                        month: 'short',
+                        day: 'numeric',
+                        year: 'numeric',
+                        hour: '2-digit',
+                        minute: '2-digit'
+                    });
+
+                    return `
+                        <div class="card spacex">
+                            <span class="agency-badge spacex">SpaceX</span>
+                            <div class="card-title">${launch.name}</div>
+                            <div class="card-subtitle">${launch.details || 'SpaceX mission'}</div>
+                            <div class="info-row">
+                                <span class="label">🚀 Rocket:</span>
+                                <span class="value">Falcon ${launch.rocket === '5e9d0d95eda69973a64b2222' ? '9' : 'Heavy'}</span>
+                            </div>
+                            <div class="info-row">
+                                <span class="label">📅 Date:</span>
+                                <span class="value">${dateStr}</span>
+                            </div>
+                            <div class="info-row">
+                                <span class="label">✅ Success:</span>
+                                <span class="value">${launch.success === null ? 'Pending' : launch.success ? 'Yes' : 'No'}</span>
+                            </div>
+                            ${countdown ? `<div class="countdown">⏱️ ${countdown}</div>` : ''}
+                        </div>
+                    `;
+                }).join('');
+
+                document.getElementById('spacex-grid').innerHTML = html || '<div class="no-data">No SpaceX launches available</div>';
             } catch (error) {
-                console.error('SpaceX error:', error);
-                return [];
+                console.error('SpaceX API error:', error);
+                document.getElementById('spacex-grid').innerHTML = `<div class="error-box">Error loading SpaceX API: ${error.message}</div>`;
             }
         }
 
-        // Fetch NASA launches
-        async function fetchNASALaunches() {
+        // ROCKETLAUNCH.LIVE API - https://api.rocketlaunch.live/v2/launches
+        async function loadAllLaunches() {
             try {
-                const response = await fetch('https://api.rocketlaunch.live/v2/launches?provider=NASA');
-                const data = await response.json();
-                
-                if (!data.result) return [];
+                const [spacexRes, rocketRes] = await Promise.all([
+                    fetch('https://api.spacexdata.com/v4/launches'),
+                    fetch('https://api.rocketlaunch.live/v2/launches')
+                ]);
 
-                nasaLaunches = data.result.map(launch => ({
-                    id: launch.id,
-                    name: launch.name,
-                    rocket: launch.vehicle?.name || 'Unknown Rocket',
-                    agency: 'NASA',
-                    date: new Date(launch.window_start * 1000),
-                    location: launch.pad?.name || 'TBD',
-                    details: launch.description || 'NASA mission',
-                    upcoming: new Date(launch.window_start * 1000) > new Date()
-                })).slice(0, 15);
+                spacexLaunches = await spacexRes.json();
+                const rocketData = await rocketRes.json();
 
-                return nasaLaunches;
+                allLaunches = [];
+
+                // Add SpaceX launches
+                spacexLaunches.forEach(launch => {
+                    allLaunches.push({
+                        name: launch.name,
+                        agency: 'SpaceX',
+                        date: new Date(launch.date_utc),
+                        details: launch.details || 'SpaceX mission',
+                        rocket: 'Falcon',
+                        location: launch.launchpad || 'TBD'
+                    });
+                });
+
+                // Add RocketLaunch.Live launches
+                if (rocketData.result) {
+                    rocketData.result.slice(0, 30).forEach(launch => {
+                        allLaunches.push({
+                            name: launch.name,
+                            agency: launch.provider || 'Other',
+                            date: new Date(launch.window_start * 1000),
+                            details: launch.description || 'Space mission',
+                            rocket: launch.vehicle?.name || 'Unknown',
+                            location: launch.pad?.name || 'TBD'
+                        });
+                    });
+                }
+
+                allLaunches.sort((a, b) => a.date - b.date);
+                filterLaunches('all');
             } catch (error) {
-                console.error('NASA error:', error);
-                return [];
+                console.error('API error:', error);
+                document.getElementById('launches-grid').innerHTML = `<div class="error-box">Error loading launches: ${error.message}</div>`;
             }
         }
 
-        // Fetch ISS data
-        async function fetchISSData() {
+        // NASA API - https://api.nasa.gov/
+        async function loadNASA() {
             try {
-                const response = await fetch('https://api.open-notify.org/iss-now.json');
+                const response = await fetch(`https://api.nasa.gov/planetary/apod?api_key=${NASA_API_KEY}`);
                 const data = await response.json();
-                
-                document.getElementById('iss-altitude').textContent = Math.round(data.iss_position.altitude || 408);
-                document.getElementById('iss-speed').textContent = Math.round(data.iss_position.velocity || 28000);
-                
-                // Fetch crew
-                const crewResponse = await fetch('https://api.open-notify.org/astros.json');
-                const crewData = await crewResponse.json();
-                
-                document.getElementById('iss-crew').textContent = crewData.number || '--';
-                
-                const crewList = crewData.people.filter(p => p.craft === 'ISS').map(p => 
-                    `<div style="color: #a0a0c0;">👨‍🚀 ${p.name}</div>`
-                ).join('');
-                
-                document.getElementById('iss-crew-list').innerHTML = crewList || '<div style="color: #a0a0c0;">No crew data available</div>';
+
+                // Also load from RocketLaunch.Live for NASA missions
+                const rocketRes = await fetch('https://api.rocketlaunch.live/v2/launches?provider=NASA');
+                const rocketData = await rocketRes.json();
+
+                const html = (rocketData.result || []).slice(0, 20).map(launch => {
+                    const date = new Date(launch.window_start * 1000);
+                    const countdown = getCountdown(date);
+                    const dateStr = date.toLocaleDateString('en-US', {
+                        month: 'short',
+                        day: 'numeric',
+                        year: 'numeric',
+                        hour: '2-digit',
+                        minute: '2-digit'
+                    });
+
+                    return `
+                        <div class="card nasa">
+                            <span class="agency-badge nasa">NASA</span>
+                            <div class="card-title">${launch.name}</div>
+                            <div class="card-subtitle">${launch.description || 'NASA mission'}</div>
+                            <div class="info-row">
+                                <span class="label">🚀 Rocket:</span>
+                                <span class="value">${launch.vehicle?.name || 'Unknown'}</span>
+                            </div>
+                            <div class="info-row">
+                                <span class="label">📍 Location:</span>
+                                <span class="value">${launch.pad?.name || 'TBD'}</span>
+                            </div>
+                            <div class="info-row">
+                                <span class="label">📅 Date:</span>
+                                <span class="value">${dateStr}</span>
+                            </div>
+                            ${countdown ? `<div class="countdown">⏱️ ${countdown}</div>` : ''}
+                        </div>
+                    `;
+                }).join('');
+
+                document.getElementById('nasa-grid').innerHTML = html || '<div class="no-data">No NASA launches available</div>';
             } catch (error) {
-                console.error('ISS error:', error);
+                console.error('NASA API error:', error);
+                document.getElementById('nasa-grid').innerHTML = `<div class="error-box">Error loading NASA data: ${error.message}</div>`;
+            }
+        }
+
+        // OPEN-NOTIFY API - ISS - https://api.open-notify.org/iss-now.json
+        async function loadISS() {
+            try {
+                const [issRes, crewRes] = await Promise.all([
+                    fetch('https://api.open-notify.org/iss-now.json'),
+                    fetch('https://api.open-notify.org/astros.json')
+                ]);
+
+                const issData = await issRes.json();
+                const crewData = await crewRes.json();
+
+                document.getElementById('iss-altitude').textContent = Math.round(issData.iss_position.altitude || 408);
+                document.getElementById('iss-speed').textContent = Math.round(issData.iss_position.velocity || 28000);
+                document.getElementById('iss-latitude').textContent = (issData.iss_position.latitude || 0).toFixed(2);
+                document.getElementById('iss-longitude').textContent = (issData.iss_position.longitude || 0).toFixed(2);
+
+                const crewHtml = crewData.people.filter(p => p.craft === 'ISS').map(p => `
+                    <div class="card">
+                        <div class="card-title">👨‍🚀 ${p.name}</div>
+                        <div class="card-subtitle">🚀 ${p.craft}</div>
+                    </div>
+                `).join('');
+
+                document.getElementById('iss-crew').innerHTML = crewHtml || '<div class="no-data">No crew data available</div>';
+            } catch (error) {
+                console.error('ISS API error:', error);
                 document.getElementById('iss-altitude').textContent = '408';
                 document.getElementById('iss-speed').textContent = '28000';
-                document.getElementById('iss-crew').textContent = '7';
             }
         }
 
-        // Fetch astronauts
-        async function fetchAstronauts() {
+        // OPEN-NOTIFY API - Astronauts - https://api.open-notify.org/astros.json
+        async function loadAstronauts() {
             try {
                 const response = await fetch('https://api.open-notify.org/astros.json');
                 const data = await response.json();
-                
-                const astronautsHtml = data.people.map(p => `
-                    <div class="card astronaut-card">
-                        <div class="astronaut-name">${p.name}</div>
-                        <div class="astronaut-info">
-                            <div>🚀 ${p.craft}</div>
-                        </div>
+
+                const html = data.people.map(p => `
+                    <div class="card">
+                        <div class="card-title">👨‍🚀 ${p.name}</div>
+                        <div class="card-subtitle">🚀 ${p.craft}</div>
                     </div>
                 `).join('');
-                
-                document.getElementById('astronauts-grid').innerHTML = astronautsHtml || '<div class="loading">No astronauts in space currently</div>';
+
+                document.getElementById('astronauts-grid').innerHTML = html || '<div class="no-data">No astronauts in space</div>';
             } catch (error) {
-                console.error('Astronauts error:', error);
-                document.getElementById('astronauts-grid').innerHTML = '<div style="color: #a0a0c0;">Unable to load astronaut data</div>';
+                console.error('Astronauts API error:', error);
+                document.getElementById('astronauts-grid').innerHTML = `<div class="error-box">Error loading astronauts: ${error.message}</div>`;
             }
         }
 
-        // Display launches
-        function displayLaunches(filter = 'all') {
-            let filtered = allLaunches;
-            const now = new Date();
+        // NASA APOD API - https://api.nasa.gov/planetary/apod
+        async function loadAPOD() {
+            try {
+                const response = await fetch(`https://api.nasa.gov/planetary/apod?api_key=${NASA_API_KEY}`);
+                const data = await response.json();
 
-            if (filter === 'upcoming') {
-                filtered = allLaunches.filter(l => l.date > now);
-            } else if (filter === 'recent') {
-                filtered = allLaunches.filter(l => l.date <= now && l.date > new Date(now - 60 * 24 * 60 * 60 * 1000));
-            } else if (filter === 'spacex') {
-                filtered = allLaunches.filter(l => l.agency === 'SpaceX');
-            } else if (filter === 'nasa') {
-                filtered = allLaunches.filter(l => l.agency === 'NASA');
+                const html = `
+                    <div style="background: rgba(30, 40, 80, 0.9); border: 2px solid rgba(100, 200, 255, 0.3); border-radius: 12px; padding: 20px;">
+                        <h3 style="color: #64c8ff; margin-bottom: 15px;">${data.title || 'NASA APOD'}</h3>
+                        <p style="color: #a0a0c0; margin-bottom: 20px;">${data.date || 'Today'}</p>
+                        ${data.media_type === 'image' ? `
+                            <img src="${data.url}" alt="${data.title}" style="max-width: 100%; border-radius: 8px; margin-bottom: 20px;">
+                        ` : `
+                            <iframe width="100%" height="400" src="${data.url}" frameborder="0" style="border-radius: 8px; margin-bottom: 20px;"></iframe>
+                        `}
+                        <p style="color: #d0d0d0; line-height: 1.8;">${data.explanation || 'No description available'}</p>
+                        ${data.copyright ? `<p style="color: #7080a0; margin-top: 15px; font-size: 0.9em;">© ${data.copyright}</p>` : ''}
+                    </div>
+                `;
+
+                document.getElementById('apod-container').innerHTML = html;
+            } catch (error) {
+                console.error('APOD API error:', error);
+                document.getElementById('apod-container').innerHTML = `<div class="error-box">Error loading APOD: ${error.message}<br><br>Note: DEMO_KEY has limited requests. Get your free key at https://api.nasa.gov/</div>`;
             }
+        }
+
+        function filterLaunches(type) {
+            document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+            if (event) event.target.classList.add('active');
+
+            let filtered = allLaunches;
+            if (type === 'spacex') filtered = allLaunches.filter(l => l.agency === 'SpaceX');
+            else if (type === 'nasa') filtered = allLaunches.filter(l => l.agency === 'NASA');
+            else if (type === 'other') filtered = allLaunches.filter(l => l.agency !== 'SpaceX' && l.agency !== 'NASA');
 
             const html = filtered.slice(0, 30).map(launch => {
                 const countdown = getCountdown(launch.date);
@@ -659,53 +688,13 @@
                     minute: '2-digit'
                 });
 
-                const isUpcoming = launch.date > now;
+                let agencyClass = launch.agency === 'SpaceX' ? 'spacex' : launch.agency === 'NASA' ? 'nasa' : 'other';
 
                 return `
-                    <div class="card ${launch.agency.toLowerCase()}">
-                        <span class="agency ${launch.agency.toLowerCase()}">${launch.agency}</span>
-                        <div class="title">${launch.name}</div>
-                        <div class="subtitle">${launch.details}</div>
-                        <div class="info-row">
-                            <span class="label">🚀 Rocket:</span>
-                            <span class="value">${launch.rocket}</span>
-                        </div>
-                        <div class="info-row">
-                            <span class="label">📍 Location:</span>
-                            <span class="value">${launch.location}</span>
-                        </div>
-                        <div class="info-row">
-                            <span class="label">📅 Date:</span>
-                            <span class="value">${dateStr}</span>
-                        </div>
-                        <span class="status ${isUpcoming ? 'upcoming' : 'recent'}">${isUpcoming ? '⏳ Upcoming' : '✓ Recent'}</span>
-                        ${countdown ? `<div class="countdown">⏱️ ${countdown}</div>` : ''}
-                    </div>
-                `;
-            }).join('');
-
-            document.getElementById('launches-grid').innerHTML = html || '<div style="color: #a0a0c0; text-align: center; padding: 40px;">No launches found</div>';
-        }
-
-        // Display SpaceX
-        function displaySpaceX() {
-            const upcoming = spacexLaunches.filter(l => l.upcoming);
-            document.getElementById('spacex-count').textContent = upcoming.length;
-
-            const html = spacexLaunches.slice(0, 12).map(launch => {
-                const countdown = getCountdown(launch.date);
-                const dateStr = launch.date.toLocaleDateString('en-US', {
-                    month: 'short',
-                    day: 'numeric',
-                    year: 'numeric',
-                    hour: '2-digit',
-                    minute: '2-digit'
-                });
-
-                return `
-                    <div class="card spacex">
-                        <div class="agency spacex">SpaceX</div>
-                        <div class="title">${launch.name}</div>
+                    <div class="card ${agencyClass}">
+                        <span class="agency-badge ${agencyClass}">${launch.agency}</span>
+                        <div class="card-title">${launch.name}</div>
+                        <div class="card-subtitle">${launch.details}</div>
                         <div class="info-row">
                             <span class="label">🚀 Rocket:</span>
                             <span class="value">${launch.rocket}</span>
@@ -723,52 +712,12 @@
                 `;
             }).join('');
 
-            document.getElementById('spacex-grid').innerHTML = html || '<div style="color: #a0a0c0;">No SpaceX launches available</div>';
-        }
-
-        // Display NASA
-        function displayNASA() {
-            const upcoming = nasaLaunches.filter(l => l.upcoming);
-            document.getElementById('nasa-count').textContent = upcoming.length;
-
-            const html = nasaLaunches.slice(0, 12).map(launch => {
-                const countdown = getCountdown(launch.date);
-                const dateStr = launch.date.toLocaleDateString('en-US', {
-                    month: 'short',
-                    day: 'numeric',
-                    year: 'numeric',
-                    hour: '2-digit',
-                    minute: '2-digit'
-                });
-
-                return `
-                    <div class="card nasa">
-                        <div class="agency nasa">NASA</div>
-                        <div class="title">${launch.name}</div>
-                        <div class="info-row">
-                            <span class="label">🚀 Rocket:</span>
-                            <span class="value">${launch.rocket}</span>
-                        </div>
-                        <div class="info-row">
-                            <span class="label">📍 Location:</span>
-                            <span class="value">${launch.location}</span>
-                        </div>
-                        <div class="info-row">
-                            <span class="label">📅 Date:</span>
-                            <span class="value">${dateStr}</span>
-                        </div>
-                        ${countdown ? `<div class="countdown">⏱️ ${countdown}</div>` : ''}
-                    </div>
-                `;
-            }).join('');
-
-            document.getElementById('nasa-grid').innerHTML = html || '<div style="color: #a0a0c0;">No NASA launches available</div>';
+            document.getElementById('launches-grid').innerHTML = html || '<div class="no-data">No launches found</div>';
         }
 
         function getCountdown(date) {
             const now = new Date();
             const diff = date - now;
-            
             if (diff < 0) return null;
             
             const days = Math.floor(diff / (1000 * 60 * 60 * 24));
@@ -778,30 +727,8 @@
             return `${days}d ${hours}h ${minutes}m`;
         }
 
-        // Initialize
-        async function init() {
-            await Promise.all([
-                fetchSpaceXLaunches(),
-                fetchNASALaunches(),
-                fetchISSData(),
-                fetchAstronauts()
-            ]);
-
-            allLaunches = [...spacexLaunches, ...nasaLaunches]
-                .filter(l => l && l.date && !isNaN(l.date))
-                .sort((a, b) => a.date - b.date);
-
-            displayLaunches();
-            displaySpaceX();
-            displayNASA();
-
-            // Update stats
-            document.getElementById('total-launches').textContent = spacexLaunches.length;
-            document.getElementById('spacex-landings').textContent = spacexLaunches.filter(l => l.success !== false).length;
-            document.getElementById('active-satellites').textContent = '8,000+';
-        }
-
-        init();
+        // Load initial data
+        loadAllLaunches();
     </script>
 </body>
 </html>
